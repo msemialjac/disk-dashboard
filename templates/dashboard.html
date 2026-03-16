@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disk Usage Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Disk Usage Dashboard</h1>
+  <span class="host" id="hostInfo">loading...</span>
+  <span class="refresh-info" id="refreshInfo"></span>
+</header>
+
+<div class="controls">
+  <div class="control-group">
+    <label>View</label>
+    <div class="toggle-group">
+      <button id="viewBars" class="active" onclick="setView('bars')">Bars</button>
+      <button id="viewDonut" onclick="setView('donut')">Donut</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Sort</label>
+    <select id="sortBy" onchange="render()">
+      <option value="pct-desc">Usage % (high to low)</option>
+      <option value="pct-asc">Usage % (low to high)</option>
+      <option value="size-desc">Total size (large to small)</option>
+      <option value="used-desc">Used space (large to small)</option>
+      <option value="avail-desc">Available (large to small)</option>
+      <option value="name">Name (A to Z)</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Filter</label>
+    <select id="filterType" onchange="render()">
+      <option value="all">All filesystems</option>
+      <option value="physical">Physical disks only</option>
+      <option value="network">Network / FUSE</option>
+      <option value="snap">Snaps only</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Warn at</label>
+    <select id="threshold" onchange="render()">
+      <option value="0">Off</option>
+      <option value="50">50%</option>
+      <option value="70">70%</option>
+      <option value="80" selected>80%</option>
+      <option value="90">90%</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Units</label>
+    <div class="toggle-group">
+      <button id="unitHuman" class="active" onclick="setUnit('human')">Human</button>
+      <button id="unitGB" onclick="setUnit('gb')">GB</button>
+      <button id="unitBytes" onclick="setUnit('bytes')">Bytes</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Donut</label>
+    <div class="toggle-group">
+      <button id="donutCapacity" class="active" onclick="setDonutMode('capacity')">Capacity</button>
+      <button id="donutDetail" onclick="setDonutMode('detail')">Detail</button>
+      <button id="donutUsed" onclick="setDonutMode('used')">Used</button>
+    </div>
+  </div>
+  <div class="control-group">
+    <label>Refresh</label>
+    <select id="refreshInterval" onchange="setRefreshInterval()">
+      <option value="0">Manual</option>
+      <option value="10">10s</option>
+      <option value="30" selected>30s</option>
+      <option value="60">1 min</option>
+      <option value="300">5 min</option>
+    </select>
+    <button onclick="fetchData()" title="Refresh now">&#x21bb;</button>
+  </div>
+</div>
+
+<main>
+  <div class="summary" id="summaryCards"></div>
+  <div id="barsView" class="bar-section"></div>
+  <div id="donutView" class="chart-area" style="display:none"></div>
+  <div id="detailPanel" class="detail-panel"></div>
+</main>
+
+<div class="prompt-bar">
+  <div class="prompt-toggle" onclick="togglePrompt()">
+    <span class="arrow" id="promptArrow">&#x25B2;</span>
+    <span>Prompt Output</span>
+  </div>
+  <div class="prompt-content" id="promptContent">
+    <div class="prompt-text" id="promptText"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy</button>
+  </div>
+</div>
+
+<script src="/static/dashboard.js"></script>
+</body>
+</html>
